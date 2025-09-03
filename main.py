@@ -6,6 +6,7 @@ import pygame
 from constants import * 
 from circleshape import *
 from player import *
+from asteroidfield import *
 
 def main():
     print("Starting Asteroids!")
@@ -16,15 +17,26 @@ def main():
     dt = 0 # delta time -- track clock ticks to adjust framerate
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    # Define object Groups and members
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    asteroidfield = AsteroidField()
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         screen.fill((0, 0, 0))
-        player.update(dt)
-        player.draw(screen)
+        updatable.update(dt)
+        for sprite in drawable:
+            sprite.draw(screen)
         pygame.display.flip()
         dt = gameclock.tick(60) / 1000
 
