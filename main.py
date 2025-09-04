@@ -39,6 +39,12 @@ def main():
         screen.fill((0, 0, 0))
         updatable.update(dt)
         for asteroid in asteroids:
+            for shot in shots:
+                if shot.collided_with(asteroid):
+                    shot.kill()
+                    asteroid.split()
+        # Looping over asteroids a second time, because we may have more or fewer asteroids after the shot collisions above
+        for asteroid in asteroids:
             if player.collided_with(asteroid):
                 print("Game over!")
                 return
